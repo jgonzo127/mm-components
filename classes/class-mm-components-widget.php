@@ -31,7 +31,9 @@ class Mm_Components_Widget extends WP_Widget {
 	 */
 	public function field_text( $label = '', $description = '', $classes = '', $key = '', $value = '' ) {
 
-		echo '<p><label>' . esc_html( $label ) . '</label>';
+		echo '<p class="mm-text-field-wrap">';
+
+			echo '<label>' . esc_html( $label ) . '</label><br />';
 
 			printf(
 				'<input type="text" class="%s" name="%s" value="%s" />',
@@ -57,7 +59,9 @@ class Mm_Components_Widget extends WP_Widget {
 	 */
 	public function field_textarea( $label = '', $description = '', $classes = '', $key = '', $value = '', $rows = '4', $cols = '4' ) {
 
-		echo '<p><label>' . esc_html( $label ) . '</label>';
+		echo '<p class="mm-textarea-field-wrap">';
+
+			echo '<label>' . esc_html( $label ) . '</label><br />';
 
 			printf(
 				'<textarea class="%s" name="%s" rows="%s" cols="%s">%s</textarea>',
@@ -85,7 +89,9 @@ class Mm_Components_Widget extends WP_Widget {
 	 */
 	public function field_select( $label = '', $description = '', $classes = '', $key = '', $value = '', $options = array() ) {
 
-		echo '<p><label>' . esc_html( $label ) . '</label>';
+		echo '<p class="mm-select-field-wrap">';
+
+			echo '<label>' . esc_html( $label ) . '</label><br />';
 
 			printf(
 				'<select class="%s" name="%s">',
@@ -142,7 +148,7 @@ class Mm_Components_Widget extends WP_Widget {
 
 		$val = (int)mm_true_or_false( $value );
 
-		echo '<p>';
+		echo '<p class="mm-checkbox-field-wrap">';
 
 			printf(
 				'<input type="checkbox" class="%s" name="%s" value="1" %s /> <label class="%s">%s</label><br />',
@@ -176,7 +182,9 @@ class Mm_Components_Widget extends WP_Widget {
 			$values = $value;
 		}
 
-		echo '<p><label class="multi-checkbox-group-label">' . esc_html( $label ) . '</label><br />';
+		echo '<p class="mm-multi-checkbox-field-wrap">';
+
+			echo '<label class="multi-checkbox-group-label">' . esc_html( $label ) . '</label><br />';
 
 			echo '<span class="mm-multi-checkbox-wrap">';
 
@@ -243,7 +251,9 @@ class Mm_Components_Widget extends WP_Widget {
 	 */
 	public function field_radio( $label = '', $description = '', $classes = '', $key = '', $value = '', $options = array() ) {
 
-		echo '<p><label class="radio-group-label">' . esc_html( $label ) . '</label><br />';
+		echo '<p class="mm-radio-field-wrap">';
+
+			echo '<label class="radio-group-label">' . esc_html( $label ) . '</label><br />';
 
 			// Test whether we have an associative or indexed array.
 			if ( array_values( $options ) === $options ) {
@@ -310,7 +320,9 @@ class Mm_Components_Widget extends WP_Widget {
 
 		$show_opacity = ( mm_true_or_false( $show_opacity ) ) ? 'true' : 'false';
 
-		echo '<p><label>' . esc_html( $label ) . '</label><br />';
+		echo '<p class="mm-alpha-color-picker-field-wrap">';
+
+			echo '<label>' . esc_html( $label ) . '</label><br />';
 
 			printf(
 				'<input class="%s" type="text" name="%s" value="%s" data-palette="%s" data-show-opacity="%s" data-default-color="%s" />',
@@ -339,13 +351,15 @@ class Mm_Components_Widget extends WP_Widget {
 	 */
 	public function field_single_media( $label = '', $description = '', $classes = '', $key = '', $value = '' ) {
 
-		if ( is_int( $value ) ) {
-			$image = wp_get_attachment_image_src( $value, 'large' )[0];
+		if ( is_numeric( $value ) ) {
+			$image = wp_get_attachment_image_src( (int)$value, 'large' )[0];
 		} else {
 			$image = '';
 		}
 
-		echo '<p><label>' . esc_html( $label ) . '</label><br />';
+		echo '<p class="mm-single-media-field-wrap">';
+
+			echo '<label>' . esc_html( $label ) . '</label><br />';
 
 			?>
 			<span class="mm-single-media-wrap">
@@ -380,13 +394,17 @@ class Mm_Components_Widget extends WP_Widget {
 			$image_ids = explode( ',', $value );
 			$images    = array();
 			foreach ( $image_ids as $image_id ) {
-				$images[ $image_id ] = wp_get_attachment_image_src( $image_id, 'thumbnail' )[0];
+				if ( is_numeric( $image_id ) ) {
+					$images[ $image_id ] = wp_get_attachment_image_src( (int)$image_id, 'thumbnail' )[0];
+				}
 			}
 		} else {
 			$images = array();
 		}
 
-		echo '<p><label>' . esc_html( $label ) . '</label><br />';
+		echo '<p class="mm-multi-media-field-wrap">';
+
+			echo '<label>' . esc_html( $label ) . '</label><br />';
 
 			?>
 			<span class="mm-multi-media-wrap">
@@ -430,7 +448,7 @@ class Mm_Components_Widget extends WP_Widget {
 	 */
 	public function field_custom( $label = '', $description = '', $output = '' ) {
 
-		echo '<p>';
+		echo '<p class="mm-custom-field-wrap">';
 
 			echo '<label>' . esc_html( $label ) . '</label><br />';
 
