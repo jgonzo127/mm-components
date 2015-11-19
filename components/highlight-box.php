@@ -8,38 +8,48 @@
  * @since   1.0.0
  */
 
-add_shortcode( 'mm_highlight_box', 'mm_highlight_box_shortcode' );
 /**
- * Output Highlight Box.
+ * Build and return the Highlight Box component.
  *
- * @since  1.0.0
+ * @since   1.0.0
  *
- * @param   array  $atts  Shortcode attributes.
+ * @param   array  $args  The args.
  *
- * @return  string        Shortcode output.
+ * @return  string        The HTML.
  */
-function mm_highlight_box_shortcode( $atts, $content = null, $tag ) {
+function mm_highlight_box( $args ) {
 
-	$atts = mm_shortcode_atts( array(
+	$component = 'mm-highlight-box';
+
+	// Set our defaults and use them as needed.
+	$defaults = array(
 		'heading_text'   => '',
 		'paragraph_text' => '',
 		'link_text'      => '',
 		'link'           => '',
 		'link_target'    => '',
-	), $atts );
+	);
+	$args = wp_parse_args( (array)$args, $defaults);
+
+	// Get clean param values.
+	$heading_text     = $args['heading_text'];
+	$paragraph_text   = $args['paragraph_text'];
+	$link_text        = $args['link_text'];
+	$link             = $args['link'];
+	$link_target      = $args['link_target'];
 
 	// Handle a raw link or a VC link array.
 	$link_url    = '';
 	$link_title  = '';
 	$link_target = '';
 
-	if ( ! empty( $atts['link'] ) ) {
+	if ( ! empty( $link ) ) {
 
-		if ( 'url' === substr( $atts['link'], 0, 3 ) ) {
+		if ( 'url' === substr( $link, 0, 3 ) ) {
 
 			if ( function_exists( 'vc_build_link' ) ) {
 
-				$link_array  = vc_build_link( $atts['link'] );
+				$link_array  = vc_build_link( $link );
 				$link_url    = $link_array['url'];
 				$link_title  = $link_array['title'];
 				$link_target = $link_array['target'];
@@ -47,33 +57,33 @@ function mm_highlight_box_shortcode( $atts, $content = null, $tag ) {
 
 		} else {
 
-			$link_url    = $atts['link'];
-			$link_title  = $atts['link_title'];
-			$link_target = $atts['link_target'];
+			$link_url    = $link;
+			$link_title  = $link_title;
+			$link_target = $link_target;
 		}
 	}
 
 	// Get Mm classes.
-	$mm_classes = apply_filters( 'mm_components_custom_classes', '', $tag, $atts );
+	$mm_classes = apply_filters( 'mm_components_custom_classes', '', $component, $args );
 
 	ob_start(); ?>
 
 	<div class="<?php echo $mm_classes; ?>">
 
-		<?php if ( ! empty( $atts['heading_text'] ) ) : ?>
-			<h3><?php echo $atts['heading_text']; ?></h3>
+		<?php if ( ! empty( $heading_text ) ) : ?>
+			<h3><?php echo $heading_text; ?></h3>
 		<?php endif; ?>
 
-		<?php if ( ! empty( $atts['paragraph_text'] ) ) : ?>
-			<p><?php echo $atts['paragraph_text']; ?></p>
+		<?php if ( ! empty( $paragraph_text ) ) : ?>
+			<p><?php echo $paragraph_text; ?></p>
 		<?php endif; ?>
 
-		<?php if ( ! empty( $link_url ) && ! empty( $atts['link_text'] ) ) {
+		<?php if ( ! empty( $link_url ) && ! empty( $link_text ) ) {
 			printf( '<a href="%s" title="%s" target="%s">%s</a>',
 				esc_url( $link_url ),
 				esc_attr( $link_title ),
 				esc_attr( $link_target ),
-				esc_html( $atts['link_text'] )
+				esc_html( $link_text )
 			);
 		} ?>
 
@@ -84,6 +94,22 @@ function mm_highlight_box_shortcode( $atts, $content = null, $tag ) {
 	$output = ob_get_clean();
 
 	return $output;
+}
+
+add_shortcode( 'mm_highlight_box', 'mm_highlight_box_shortcode' );
+/**
+ * Restricted Content shortcode.
+ *
+ * @since   1.0.0
+ *
+ * @param   array   $atts     Shortcode attributes.
+ * @param   string  $content  Shortcode content.
+ *
+ * @return  string            Shortcode output.
+ */
+function mm_highlight_box_shortcode( $atts = array(), $content = null ) {
+
+	return mm_highlight_box( $atts );
 }
 
 add_action( 'vc_before_init', 'mm_vc_highlight_box' );
