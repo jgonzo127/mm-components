@@ -140,6 +140,33 @@ class Mm_Components_Widget extends WP_Widget {
 	}
 
 	/**
+	 * Output a date picker.
+	 *
+	 * @since  1.0.0
+	 */
+	public function field_date( $label = '', $description = '', $classes = '', $key = '', $value = '' ) {
+
+
+		echo '<p class="mm-date-field-wrap">';
+
+			printf(
+				'<input type="date" class="%s" name="%s" value="%s"/><br />',
+				esc_attr( $classes ),
+				$this->get_field_name( $key ),
+				esc_attr( $value )
+			);
+
+			if ( '' !== $description) {
+				printf(
+					'<small class="mm-description-text">%s</small>',
+					esc_html( $description )
+				);
+			}
+
+		echo '</p>';
+	}
+
+	/**
 	 * Output a checkbox.
 	 *
 	 * @since  1.0.0
