@@ -548,7 +548,6 @@ class Mm_Icon_Box_Widget extends Mm_Components_Widget {
 		$instance['link_text']         = sanitize_text_field( $new_instance['link_text'] );
 		$instance['link_target']       = sanitize_text_field( $new_instance['link_target'] );
 	
-
 		return $instance;
 	}
 }
