@@ -417,17 +417,17 @@ class Mm_Icon_Box_Widget extends Mm_Components_Widget {
 		// Icon Font Awesome.
 		$this->field_select(
 			__( 'Icon Font Awesome', 'mm-components' ),
-			__( 'Select an icon.', 'mm-components' ),
+			__( 'Select an icon from the library.', 'mm-components' ),
 			$classname . '-icon-fontawesome widefat',
 			'icon_fontawesome',
 			$icon_fontawesome,
 			mm_components_load_bfa()
 		);
 
-		// Icon Font Awesome.
+		// Icon Open Iconic.
 		$this->field_select(
-			__( 'Icon Font Awesome', 'mm-components' ),
-			__( 'Select an icon.', 'mm-components' ),
+			__( 'Icon Open Iconic', 'mm-components' ),
+			__( 'Select an icon from the library.', 'mm-components' ),
 			$classname . '-icon-fontawesome widefat',
 			'icon_openiconic',
 			$icon_openiconic,
@@ -437,7 +437,7 @@ class Mm_Icon_Box_Widget extends Mm_Components_Widget {
 		// Icon Typicons.
 		$this->field_select(
 			__( 'Icon Typicons', 'mm-components' ),
-			__( 'Select an icon.', 'mm-components' ),
+			__( 'Select an icon from the library.', 'mm-components' ),
 			$classname . '-icon-typicons widefat',
 			'icon_typicons',
 			$icon_typicons,
@@ -447,7 +447,7 @@ class Mm_Icon_Box_Widget extends Mm_Components_Widget {
 		// Icon Entypo.
 		$this->field_select(
 			__( 'Icon Entypo', 'mm-components' ),
-			__( 'Select an icon.', 'mm-components' ),
+			__( 'Select an icon from the library.', 'mm-components' ),
 			$classname . '-icon-entypo widefat',
 			'icon_entypo',
 			$icon_entypo,
@@ -457,7 +457,7 @@ class Mm_Icon_Box_Widget extends Mm_Components_Widget {
 		// Icon Linecons.
 		$this->field_select(
 			__( 'Icon Linecons', 'mm-components' ),
-			__( 'Select an icon.', 'mm-components' ),
+			__( 'Select an icon from the library.', 'mm-components' ),
 			$classname . '-icon-linecons widefat',
 			'icon_linecons',
 			$icon_linecons,
