@@ -894,6 +894,76 @@ function mm_get_font_weights_for_vc( $context = '' ) {
 }
 
 /**
+ * Return an array of icon box font types.
+ *
+ * @since   1.0.0
+ *
+ * @param   string  $context  The context to pass to our filter.
+ *
+ * @return  array             The array of icon font types.
+ */
+function mm_get_icon_font_types( $context = '' ) {
+
+	$font_types = array(
+		'fontawesome' => __( 'Font Awesome', 'mm-components' ),
+		'openiconic'  => __( 'Open Iconic', 'mm-components' ),
+		'typicons'    => __( 'Typicons', 'mm-components' ),
+		'entypo'      => __( 'Entypo', 'mm-components' ),
+		'linecons'    => __( 'Linecons', 'mm-components' ),
+	);
+
+	return apply_filters( 'mm_icon_font_types', $font_types, $context );
+}
+
+/**
+ * Return an array of icon font types for VC.
+ *
+ * @since   1.0.0
+ *
+ * @param   string  $context  The context to pass to our filter.
+ *
+ * @return  array             The array of icon font types.
+ */
+function mm_get_icon_font_types_for_vc( $context = '' ) {
+
+	return array_flip( mm_get_icon_font_types( $context ) );
+}
+
+/**
+ * Return an array of icon box sizes.
+ *
+ * @since   1.0.0
+ *
+ * @param   string  $context  The context to pass to our filter.
+ *
+ * @return  array             The array of icon box sizes.
+ */
+function mm_get_icon_box_sizes( $context = '' ) {
+
+	$box_sizes = array(
+		'normal' => __( 'Normal', 'mm-components' ),
+		'large'  => __( 'Large', 'mm-components' ),
+		'small'  => __( 'Small', 'mm-components' ),
+	);
+
+	return apply_filters( 'mm_icon_box_sizes', $box_sizes, $context );
+}
+
+/**
+ * Return an array of icon box sizes for VC.
+ *
+ * @since   1.0.0
+ *
+ * @param   string  $context  The context to pass to our filter.
+ *
+ * @return  array             The array of icon boxes.
+ */
+function mm_get_icon_box_sizes_for_vc( $context = '' ) {
+
+	return array_flip( mm_get_icon_box_sizes( $context ) );
+}
+
+/**
  * Return an array of button style options.
  *
  * @since   1.0.0

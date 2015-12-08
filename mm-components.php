@@ -219,6 +219,47 @@ function mm_components_scripts_and_styles() {
 	);
 }
 
+add_action( 'wp_enqueue_scripts', 'mm_components_register_icon_fonts' );
+/**
+ * Register Mm icon fonts.
+ *
+ * @since  1.0.0
+ */
+function mm_components_register_icon_fonts() {
+
+	// Register Openiconic.
+	wp_register_style(
+		'mm-icon-font-openiconic',
+		MM_COMPONENTS_URL . 'lib/icon-fonts/open-iconic/openiconic.css',
+		array(),
+		MM_COMPONENTS_VERSION
+	);
+
+	// Register Typicons.
+	wp_register_style(
+		'mm-icon-font-typicons',
+		MM_COMPONENTS_URL . 'lib/icon-fonts/typicons/typicons.css',
+		array(),
+		MM_COMPONENTS_VERSION
+	);
+
+	// Register Entypo.
+	wp_register_style(
+		'mm-icon-font-entypo',
+		MM_COMPONENTS_URL . 'lib/icon-fonts/entypo/entypo.css',
+		array(),
+		MM_COMPONENTS_VERSION
+	);
+
+	// Register Linecons.
+	wp_register_style(
+		'mm-icon-font-linecons',
+		MM_COMPONENTS_URL . 'lib/icon-fonts/linecons/linecons.css',
+		array(),
+		MM_COMPONENTS_VERSION
+	);
+}
+
 add_filter( 'mm_components_custom_classes', 'mm_components_custom_classes', 10, 3 );
 /**
  * Add custom component classes.
