@@ -37,7 +37,7 @@ function mm_slider( $args ) {
 	}
 
 	// Get clean param values.
-	$image_ids = ( is_array( $args['images_ids'] ) ) ? $args['image_ids'] : explode( ',', str_replace( ' ', '', $args['image_ids'] );
+	$image_ids = ( is_array( $args['image_ids'] ) ) ? $args['image_ids'] : explode( ',', str_replace( ' ', '', $args['image_ids'] ) );
 
 	// Get Mm classes.
 	$mm_classes = apply_filters( 'mm_components_custom_classes', '', $component, $args );
@@ -50,7 +50,12 @@ function mm_slider( $args ) {
 				foreach ( $image_ids as $image_id ) {
 
 					$image = wp_get_attachment_image_src( $image_id[0] );
-					is_wp_error( $image_id );
+					is_wp_error( $image );
+
+					printf(
+						'<li class="mm-slider-image">%s</li>',
+						wp_get_attachment_image_src( $image )
+					);
 				}
 			?>
 		</ul>
@@ -91,20 +96,11 @@ function mm_vc_slider() {
 		'category' => __( 'Content', 'mm-components' ),
 		'params'   => array(
 			array(
-				'type'        => 'attach_image',
-				'heading'     => __( 'Image', 'mm-components' ),
-				'param_name'  => 'image_id',
-				'description' => __( 'Select an image from the library.', 'mm-components' ),
-			),
-			array(
-				'type'       => 'textarea',
-				'heading'    => __( 'Quote', 'mm-components' ),
-				'param_name' => 'quote',
-			),
-			array(
-				'type'       => 'textfield',
-				'heading'    => __( 'Citation', 'mm-components' ),
-				'param_name' => 'citation',
+				'type'        => 'attach_images',
+				'heading'     => __( 'Images', 'mm-components' ),
+				'param_name'  => 'image_ids',
+				'description' => __( 'The bigger the image size, the better.', 'mm-components' ),
+				'value'       => '',
 			),
 		)
 	) );
