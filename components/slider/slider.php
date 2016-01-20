@@ -49,12 +49,16 @@ function mm_slider( $args ) {
 			<?php
 				foreach ( $image_ids as $image_id ) {
 
-					$image = wp_get_attachment_image_src( $image_id[0] );
-					is_wp_error( $image );
+					$image = wp_get_attachment_image_src( $image_id, 'full' );
 
+					if( is_wp_error( $image ) && is_array( $image ) ) {
+						continue;
+					}
+
+					//error_log( print_r( $image, true ) );
 					printf(
-						'<li class="mm-slider-image">%s</li>',
-						wp_get_attachment_image_src( $image )
+						'<li class="mm-slider-image"><img src="%s" /></li>',
+						esc_url( $image[0] )
 					);
 				}
 			?>
