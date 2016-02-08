@@ -55,10 +55,10 @@ function mm_slider( $args ) {
 						continue;
 					}
 
-					//error_log( print_r( $image, true ) );
 					printf(
-						'<li class="mm-slider-image"><img src="%s" /></li>',
-						esc_url( $image[0] )
+						'<li class="mm-slider-image">%s</li>',
+						// esc_url( $image[0] )
+						wp_get_attachment_image( $image_id, 'full' )
 					);
 				}
 			?>
