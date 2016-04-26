@@ -597,7 +597,7 @@ a.mm-button.full-width {
 /* Posts
 --------------------------------------------- */
 .mm-posts article {
-  overflow: auto;
+  overflow: visible;
 }
 
 .mm-posts .entry-image {
