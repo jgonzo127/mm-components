@@ -206,6 +206,22 @@ function mm_components_scripts_and_styles() {
 		true
 	);
 
+	// Register flickity.
+	wp_register_script(
+		'mm-flickity',
+		MM_COMPONENTS_URL . 'lib/flickity/flickity.pkgd.min.js',
+		array(),
+		MM_COMPONENTS_VERSION,
+		true
+	);
+
+	wp_enqueue_style(
+		'mm-flickity',
+		MM_COMPONENTS_URL . 'lib/flickity/flickity.min.css',
+		array(),
+		MM_COMPONENTS_VERSION
+	);
+
 	// General styles.
 	wp_enqueue_style(
 		'mm-components',

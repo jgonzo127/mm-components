@@ -822,6 +822,13 @@ a.mm-button.full-width {
   margin: 0 15px 0 0;
 }
 
+/* Slider
+--------------------------------------------- */
+.mm-slider .mm-carousel-item {
+  width: 100%;
+  text-align: center;
+}
+
 /* Social Icons
 --------------------------------------------- */
 /* Defaults */

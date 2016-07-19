@@ -353,6 +353,12 @@
 	 	});
 	}
 
+	function mmSliderSlideClass() {
+		$( '.mm-carousel-content > div' ).each( function() {
+			$( this ).addClass( 'mm-carousel-item' );
+		})
+	}
+
 	/**
 	 * Start the party.
 	 */
@@ -361,6 +367,7 @@
 		mmStartCountdowns();
 		mmSetupExpandableContent();
 		mmPostsInitMasonry();
+		mmSliderSlideClass();
 
 		// Trigger the scroll event once to ensure our inview listeners fire
 		// if their elements are initially in view.
