@@ -366,7 +366,32 @@ function mm_posts_taxonomy_term_filter( $query, $context, $args ) {
 			); ?>
 		</ul>
 
-	<?php endif; ?>
+	<?php endif;
+
+	$query_args = array(
+		'post_type'    => 'post',
+		'posts_per_page' => 10,
+		'post_status'    => 'publish',
+	);
+
+	$the_query = new WP_Query( $query_args );
+
+	if ( $the_query->have_posts() ) {
+		echo '<ul>';
+		while ( $the_query->have_posts() ) {
+			$the_query->the_post();
+			printf(	'<li class="entry-image"><a data-post-id="%s" href="%s">%s</a></li>',
+					get_the_ID(),
+					get_the_permalink(),
+					get_the_post_thumbnail( $post->ID, $image_size )
+				);
+		}
+		echo '</ul>';
+		/* Restore original Post Data */
+		wp_reset_postdata();
+	}
+
+	?>
 
 	</div>
 
