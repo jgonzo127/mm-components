@@ -262,7 +262,7 @@ function mm_components_mm_slider_shortcode_ui() {
 					'description' => esc_html__( 'Allow the slideshow to wrap around to the first slide.', 'mm-components' ),
 					'attr'        => 'loop',
 					'type'        => 'checkbox',
-				)
+				),
 				array(
 					'label'       => esc_html__( 'Autoplay Slideshow?', 'mm-slider' ),
 					'attr'        => 'autoplay',
