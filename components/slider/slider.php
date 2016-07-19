@@ -101,7 +101,7 @@ function mm_slider( $args ) {
 
 				$image = wp_get_attachment_image_src( $image_id, 'full' );
 
-				if( is_wp_error( $image ) && is_array( $image ) ) {
+				if( is_wp_error( $image ) || ! is_array( $image ) ) {
 					continue;
 				}
 
@@ -208,7 +208,7 @@ function mm_vc_slider() {
 			),
 			array(
 				'type'        => 'checkbox',
-				'heading'     => __( 'Show Navigation Arrows?', 'mm-components' ),
+				'heading'     => __( 'Show navigation arrows?', 'mm-components' ),
 				'param_name'  => 'nav_arrows',
 				'std'         => 1,
 				'description' => __( '', 'mm-components' ),
@@ -249,6 +249,46 @@ function mm_components_mm_slider_shortcode_ui() {
 			'label'         => esc_html__( 'Mm Slider', 'mm-components' ),
 			'listItemImage' => MM_COMPONENTS_ASSETS_URL . 'component-icon.png',
 			'attrs'         => array(
+				array(
+					'label'       => esc_html__( 'Images', 'mm-components' ),
+					'attr'        => 'image_ids',
+					'type'        => 'attachment',
+					'libraryType' => array( 'image' ),
+					'addButton'   => esc_html__( 'Select Image', 'mm-components' ),
+					'frameTitle'  => esc_html__( 'Select Image', 'mm-components' ),
+				),
+				array(
+					'label'       => esc_html__( 'Wrap Slideshow?', 'mm-slider' ),
+					'description' => esc_html__( 'Allow the slideshow to wrap around to the first slide.', 'mm-components' ),
+					'attr'        => 'loop',
+					'type'        => 'checkbox',
+				)
+				array(
+					'label'       => esc_html__( 'Autoplay Slideshow?', 'mm-slider' ),
+					'attr'        => 'autoplay',
+					'type'        => 'checkbox',
+				),
+				array(
+					'label'       => esc_html__( 'Autoplay Duration', 'mm-components' ),
+					'attr'        => 'duration',
+					'type'        => 'text',
+				),
+				array(
+					'label'       => esc_html__( 'Adaptive Height', 'mm-slider' ),
+					'description' => esc_html__( 'The slideshow height will change depending on the height of the current content.', 'mm-components' ),
+					'attr'        => 'adaptive_height',
+					'type'        => 'checkbox',
+				),
+				array(
+					'label'       => esc_html__( 'Show navigation arrows?', 'mm-slider' ),
+					'attr'        => 'nav_arrows',
+					'type'        => 'checkbox',
+				),
+				array(
+					'label'       => esc_html__( 'Enable navigation dots?', 'mm-slider' ),
+					'attr'        => 'page_dots',
+					'type'        => 'checkbox',
+				),
 			),
 		)
 	);
