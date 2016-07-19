@@ -27,21 +27,23 @@ function mm_slider( $args ) {
 		'slider_content'    => '',
 		'loop'              => true,
 		'autoplay'          => true,
-		'duration'          => 3000,
-		'prev_next'         => true,
+		'duration'          => 6000,
+		'adaptive_height'   => false,
+		'nav_arrows'        => true,
 		'page_dots'         => true,
 		'slide_class'       => '',
 	);
 	$args = wp_parse_args( (array)$args, $defaults );
 
 	// Get clean param values.
-	$image_ids      = $args['image_ids'];
-	$slider_content = $args['slider_content'];
-	$loop           = mm_true_or_false( $args['loop'] );
-	$autoplay       = mm_true_or_false( $args['autoplay'] );
-	$prev_next      = mm_true_or_false( $args['prev_next'] );
-	$page_dots      = mm_true_or_false( $args['page_dots'] );
-	$duration       = sanitize_text_field( $args['duration'] );
+	$image_ids       = $args['image_ids'];
+	$slider_content  = $args['slider_content'];
+	$loop            = mm_true_or_false( $args['loop'] );
+	$autoplay        = mm_true_or_false( $args['autoplay'] );
+	$adaptive_height = mm_true_or_false( $args['adaptive_height'] );
+	$nav_arrows      = mm_true_or_false( $args['nav_arrows'] );
+	$page_dots       = mm_true_or_false( $args['page_dots'] );
+	$duration        = (int)$args['duration'];
 
 
 	// Enqueue flickity.
@@ -66,23 +68,21 @@ function mm_slider( $args ) {
 		$inner_output = $content;
 	}
 
+	if ( ! $autoplay ) {
+		$duration = false;
+	}
+
 	$slider_options = array(
 		'cellSelector'    => '.mm-carousel-item',
 		'pageDots'        => $page_dots,
-		'prevNextButtons' => $prev_next,
+		'prevNextButtons' => $nav_arrows,
+		'adaptiveHeight'  => $adaptive_height,
 		'autoPlay'        => $duration,
 		'wrapAround'      => $loop,
 
 	);
 
-	// Convert args to data-* attributes.
-	foreach ( $slider_options as $slider_option_key => $slider_option_value ) {
-		if ( ! empty( $slider_option_value ) ) {
-	        $slider_atts[] = '"' . $slider_option_key . '": "' . $slider_option_value . '"';
-	    }
-	}
-
-	$slider_atts = esc_attr( implode( ', ', $slider_atts ) );
+	$slider_atts = json_encode( $slider_options );
 
 	// Get clean param values.
 	$image_ids = ( is_array( $image_ids ) ) ? $image_ids : explode( ',', str_replace( ' ', '', $image_ids ) );
@@ -93,7 +93,7 @@ function mm_slider( $args ) {
 
 	ob_start() ?>
 
-	<div class="<?php echo esc_attr( $mm_classes ); ?>" data-flickity='{ <?php echo $slider_atts; ?> }'>
+	<div class="<?php echo esc_attr( $mm_classes ); ?>" data-flickity=' <?php echo esc_attr( $slider_atts ); ?> '>
 
 	<?php
 		if( ! empty( $args['image_ids'] ) ) {
@@ -164,6 +164,67 @@ function mm_vc_slider() {
 				'param_name'  => 'image_ids',
 				'description' => __( 'The bigger the image size, the better.', 'mm-components' ),
 				'value'       => '',
+			),
+			array(
+				'type'        => 'checkbox',
+				'heading'     => __( 'Wrap Slideshow?', 'mm-components' ),
+				'param_name'  => 'loop',
+				'std'         => 1,
+				'description' => __( 'Allow the slideshow to wrap around to the first slide.', 'mm-components' ),
+				'value'       => array(
+					__( 'Yes', 'mm-components' ) => 1,
+				),
+			),
+			array(
+				'type'        => 'checkbox',
+				'heading'     => __( 'Autoplay Slideshow?', 'mm-components' ),
+				'param_name'  => 'autoplay',
+				'std'         => 1,
+				'description' => __( '', 'mm-components' ),
+				'value'       => array(
+					__( 'Yes', 'mm-components' ) => 1,
+				),
+			),
+			array(
+				'type'        => 'textfield',
+				'heading'     => __( 'Autoplay Duration', 'mm-components' ),
+				'param_name'  => 'duration',
+				'description' => __( '', 'mm-components' ),
+				'value'       => 6000,
+				'dependency' => array(
+					'element'   => 'autoplay',
+					'not_empty' => true,
+				),
+			),
+			array(
+				'type'        => 'checkbox',
+				'heading'     => __( 'Adaptive Height', 'mm-components' ),
+				'param_name'  => 'adaptive_height',
+				'std'         => 1,
+				'description' => __( 'The slideshow height will change depending on the height of the current content.', 'mm-components' ),
+				'value'       => array(
+					__( 'Yes', 'mm-components' ) => 1,
+				),
+			),
+			array(
+				'type'        => 'checkbox',
+				'heading'     => __( 'Show Navigation Arrows?', 'mm-components' ),
+				'param_name'  => 'nav_arrows',
+				'std'         => 1,
+				'description' => __( '', 'mm-components' ),
+				'value'       => array(
+					__( 'Yes', 'mm-components' ) => 1,
+				),
+			),
+			array(
+				'type'        => 'checkbox',
+				'heading'     => __( 'Enable navigation dots?', 'mm-components' ),
+				'param_name'  => 'page_dots',
+				'std'         => 1,
+				'description' => __( '', 'mm-components' ),
+				'value'       => array(
+					__( 'Yes', 'mm-components' ) => 1,
+				),
 			),
 		),
 	'js_view' => 'VcColumnView'
