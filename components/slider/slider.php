@@ -23,32 +23,82 @@ function mm_slider( $args ) {
 
 	// Set our defaults and use them as needed.
 	$defaults = array(
-		'image_ids'         => '',
-		'slider_content'    => '',
-		'loop'              => true,
-		'autoplay'          => true,
-		'duration'          => 6000,
-		'adaptive_height'   => false,
-		'nav_arrows'        => true,
-		'page_dots'         => true,
-		'slide_class'       => '',
+		'image_ids'           => '',
+		'background_position' => "center bottom",
+		'slider_content'      => '',
+		'min-height'          => 360,
+		'loop'                => true,
+		'full_height'         => false,
+		'autoplay'            => true,
+		'duration'            => 6000,
+		'adaptive_height'     => false,
+		'nav_arrows'          => true,
+		'page_dots'           => true,
+		'slide_class'         => '',
+		'draggable'           => true,
+		'set_gallery_size'    => false,
 	);
 	$args = wp_parse_args( (array)$args, $defaults );
 
 	// Get clean param values.
-	$image_ids       = $args['image_ids'];
-	$slider_content  = $args['slider_content'];
-	$loop            = mm_true_or_false( $args['loop'] );
-	$autoplay        = mm_true_or_false( $args['autoplay'] );
-	$adaptive_height = mm_true_or_false( $args['adaptive_height'] );
-	$nav_arrows      = mm_true_or_false( $args['nav_arrows'] );
-	$page_dots       = mm_true_or_false( $args['page_dots'] );
-	$duration        = (int)$args['duration'];
+	$image_ids        = $args['image_ids'];
+	$background_position = $args['background_position'];
+	$slider_content   = $args['slider_content'];
+	$min_height       = $args['min-height'];
+	$full_height      = mm_true_or_false( $args['full_height'] );
+	$loop             = mm_true_or_false( $args['loop'] );
+	$autoplay         = mm_true_or_false( $args['autoplay'] );
+	$adaptive_height  = mm_true_or_false( $args['adaptive_height'] );
+	$nav_arrows       = mm_true_or_false( $args['nav_arrows'] );
+	$page_dots        = mm_true_or_false( $args['page_dots'] );
+	$duration         = (int)$args['duration'];
+	$draggable        = mm_true_or_false( $args['draggable'] );
+	$set_gallery_size = mm_true_or_false( $args['set_gallery_size'] );
+
+	$wrap_styles = array();
 
 
 	// Enqueue flickity.
 	wp_enqueue_script( 'mm-flickity' );
 	wp_enqueue_style( 'mm-flickity' );
+
+	// Get clean param values.
+	$image_ids = ( is_array( $image_ids ) ) ? $image_ids : explode( ',', str_replace( ' ', '', $image_ids ) );
+
+	// Get Mm classes.
+	$mm_classes = apply_filters( 'mm_components_custom_classes', '', $component, $args );
+	$mm_classes .= ' mm-carousel';
+
+	if ( $full_height ) {
+		$mm_classes .= ' mm-full-window-height';
+		$wrap_styles[] = '';
+	} else {
+		if ( 1 < (int)$min_height ) {
+			$wrap_styles[] = 'height: ' . (int)$min_height . 'px;';
+		}
+	}
+
+	if ( $adaptive_height ) {
+		$wrap_styles[] = '';
+		$set_gallery_size = true;
+	}
+
+	$wrap_styles[]= "background-position: $background_position;";
+
+	$wrap_styles = implode( ' ', $wrap_styles );
+
+	$slider_options = array(
+		'cellSelector'    => '.mm-carousel-item',
+		'pageDots'        => $page_dots,
+		'prevNextButtons' => $nav_arrows,
+		'adaptiveHeight'  => $adaptive_height,
+		'autoPlay'        => $duration,
+		'wrapAround'      => $loop,
+		'draggable'       => $draggable,
+		'setGallerySize'  => $set_gallery_size,
+	);
+
+	$slider_atts = json_encode( $slider_options );
 
 	$content = $slider_content;
 
@@ -72,28 +122,9 @@ function mm_slider( $args ) {
 		$duration = false;
 	}
 
-	$slider_options = array(
-		'cellSelector'    => '.mm-carousel-item',
-		'pageDots'        => $page_dots,
-		'prevNextButtons' => $nav_arrows,
-		'adaptiveHeight'  => $adaptive_height,
-		'autoPlay'        => $duration,
-		'wrapAround'      => $loop,
-
-	);
-
-	$slider_atts = json_encode( $slider_options );
-
-	// Get clean param values.
-	$image_ids = ( is_array( $image_ids ) ) ? $image_ids : explode( ',', str_replace( ' ', '', $image_ids ) );
-
-	// Get Mm classes.
-	$mm_classes = apply_filters( 'mm_components_custom_classes', '', $component, $args );
-	$mm_classes .= ' mm-carousel';
-
 	ob_start() ?>
 
-	<div class="<?php echo esc_attr( $mm_classes ); ?>" data-flickity=' <?php echo esc_attr( $slider_atts ); ?> '>
+	<div class="<?php echo esc_attr( $mm_classes ); ?>" style="<?php echo esc_attr( $wrap_styles ); ?>" data-flickity=' <?php echo esc_attr( $slider_atts ); ?> '>
 
 	<?php
 		if( ! empty( $args['image_ids'] ) ) {
@@ -167,6 +198,25 @@ function mm_vc_slider() {
 			),
 			array(
 				'type'        => 'checkbox',
+				'heading'     => __( 'Full Height', 'mm-components' ),
+				'param_name'  => 'full_height',
+				'description' => __( 'Slideshow images will stretch to fit slideshow container.', 'mm-components' ),
+				'value'       => array(
+					__( 'Yes', 'mm-components' ) => 1,
+				),
+			),
+			array(
+				'type'        => 'checkbox',
+				'heading'     => __( 'Draggable', 'mm-components' ),
+				'param_name'  => 'draggable',
+				'std'         => 1,
+				'description' => __( 'Allow the slideshow to be navigated with a click and drag.', 'mm-components' ),
+				'value'       => array(
+					__( 'Yes', 'mm-components' ) => 1,
+				),
+			),
+			array(
+				'type'        => 'checkbox',
 				'heading'     => __( 'Wrap Slideshow?', 'mm-components' ),
 				'param_name'  => 'loop',
 				'std'         => 1,
@@ -200,7 +250,6 @@ function mm_vc_slider() {
 				'type'        => 'checkbox',
 				'heading'     => __( 'Adaptive Height', 'mm-components' ),
 				'param_name'  => 'adaptive_height',
-				'std'         => 1,
 				'description' => __( 'The slideshow height will change depending on the height of the current content.', 'mm-components' ),
 				'value'       => array(
 					__( 'Yes', 'mm-components' ) => 1,
@@ -256,6 +305,18 @@ function mm_components_mm_slider_shortcode_ui() {
 					'libraryType' => array( 'image' ),
 					'addButton'   => esc_html__( 'Select Image', 'mm-components' ),
 					'frameTitle'  => esc_html__( 'Select Image', 'mm-components' ),
+				),
+				array(
+					'label'       => esc_html__( 'Draggable', 'mm-slider' ),
+					'description' => esc_html__( 'Allow the slideshow to be navigated with a click and drag.', 'mm-components' ),
+					'attr'        => 'draggable',
+					'type'        => 'checkbox',
+				),
+				array(
+					'label'       => esc_html__( 'Full Height', 'mm-slider' ),
+					'description' => esc_html__( 'Slideshow images will stretch to fit slideshow container.', 'mm-components' ),
+					'attr'        => 'full_height',
+					'type'        => 'checkbox',
 				),
 				array(
 					'label'       => esc_html__( 'Wrap Slideshow?', 'mm-slider' ),
