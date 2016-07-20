@@ -829,8 +829,8 @@ a.mm-button.full-width {
   text-align: center;
 }
 
-.mm-slider.non-adaptive-height .mm-carousel-item {
-  height: auto;
+.mm-slider:not(.adaptive) .mm-carousel-item {
+  height: 100%;
 }
 
 /* Social Icons

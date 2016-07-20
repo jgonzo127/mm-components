@@ -26,7 +26,8 @@ function mm_slider( $args ) {
 		'image_ids'           => '',
 		'background_position' => "center bottom",
 		'slider_content'      => '',
-		'min-height'          => 360,
+		'slider_height'       => 'custom-height',
+		'custom_height'       => 360,
 		'loop'                => true,
 		'full_height'         => false,
 		'autoplay'            => true,
@@ -41,19 +42,20 @@ function mm_slider( $args ) {
 	$args = wp_parse_args( (array)$args, $defaults );
 
 	// Get clean param values.
-	$image_ids        = $args['image_ids'];
+	$image_ids           = $args['image_ids'];
 	$background_position = $args['background_position'];
-	$slider_content   = $args['slider_content'];
-	$min_height       = $args['min-height'];
-	$full_height      = mm_true_or_false( $args['full_height'] );
-	$loop             = mm_true_or_false( $args['loop'] );
-	$autoplay         = mm_true_or_false( $args['autoplay'] );
-	$adaptive_height  = mm_true_or_false( $args['adaptive_height'] );
-	$nav_arrows       = mm_true_or_false( $args['nav_arrows'] );
-	$page_dots        = mm_true_or_false( $args['page_dots'] );
-	$duration         = (int)$args['duration'];
-	$draggable        = mm_true_or_false( $args['draggable'] );
-	$set_gallery_size = mm_true_or_false( $args['set_gallery_size'] );
+	$slider_content      = $args['slider_content'];
+	$slider_height       = sanitize_text_field( $args['slider_height'] );
+	$custom_height       = $args['custom_height'];
+	$full_height         = mm_true_or_false( $args['full_height'] );
+	$loop                = mm_true_or_false( $args['loop'] );
+	$autoplay            = mm_true_or_false( $args['autoplay'] );
+	$adaptive_height     = mm_true_or_false( $args['adaptive_height'] );
+	$nav_arrows          = mm_true_or_false( $args['nav_arrows'] );
+	$page_dots           = mm_true_or_false( $args['page_dots'] );
+	$duration            = (int)$args['duration'];
+	$draggable           = mm_true_or_false( $args['draggable'] );
+	$set_gallery_size    = mm_true_or_false( $args['set_gallery_size'] );
 
 	$wrap_styles = array();
 
@@ -69,15 +71,22 @@ function mm_slider( $args ) {
 	$mm_classes = apply_filters( 'mm_components_custom_classes', '', $component, $args );
 	$mm_classes .= ' mm-carousel';
 
-	if ( $full_height ) {
-		$mm_classes .= ' mm-full-window-height';
-		$slider_height = '';
-	} else {
-		if ( 1 < (int)$min_height ) {
-			$slider_height = 'height: ' . (int)$min_height . 'px;';
+	if ( 'custom-height' == $slider_height ) {
+		if ( 1 < (int)$custom_height ) {
+			$custom_height = 'height: ' . (int)$custom_height . 'px;';
 		}
+	} elseif ( 'full-height' == $slider_height ) {
+		$full_height = true;
+		$mm_classes .= ' mm-full-window-height';
+		$custom_height = '';
+	} elseif ( 'adaptive-height' == $slider_height ) {
+		$custom_height = '';
+		$set_gallery_size = true;
+		$adaptive_height = true;
+		$mm_classes .= ' adaptive';
+	}  else {
+		$custom_height = '';
 	}
-
 
 	$slider_options = array(
 		'cellSelector'    => '.mm-carousel-item',
@@ -116,7 +125,7 @@ function mm_slider( $args ) {
 
 	ob_start() ?>
 
-	<div class="<?php echo esc_attr( $mm_classes ); ?>" style="<?php echo esc_attr( $slider_height ); ?>" data-flickity=' <?php echo esc_attr( $slider_atts ); ?> '>
+	<div class="<?php echo esc_attr( $mm_classes ); ?>" style="<?php echo esc_attr( $custom_height ); ?>" data-flickity=' <?php echo esc_attr( $slider_atts ); ?> '>
 
 	<?php
 		if( ! empty( $args['image_ids'] ) ) {
@@ -173,6 +182,8 @@ add_action( 'vc_before_init', 'mm_vc_slider' );
  */
 function mm_vc_slider() {
 
+	$heights = mm_get_slider_heights_for_vc( 'mm-slider' );
+
 	vc_map( array(
 		'name'         => __( 'Slider', 'mm-components' ),
 		'base'         => 'mm_slider',
@@ -189,12 +200,23 @@ function mm_vc_slider() {
 				'value'       => '',
 			),
 			array(
-				'type'        => 'checkbox',
-				'heading'     => __( 'Full Height', 'mm-components' ),
-				'param_name'  => 'full_height',
-				'description' => __( 'Slideshow images will stretch to fit slideshow container.', 'mm-components' ),
-				'value'       => array(
-					__( 'Yes', 'mm-components' ) => 1,
+				'type'       => 'dropdown',
+				'heading'    => __( 'Select Slider Height Option', 'mm-components' ),
+				'param_name' => 'slider_height',
+				'value'      => $heights,
+			),
+			array(
+				'type'        => 'textfield',
+				'heading'     => __( 'Set Slider Height', 'mm-components' ),
+				'param_name'  => 'custom_height',
+				'std'         => 360,
+				'description' => __( 'Specify a number of pixels. Default is 360.', 'mm-components' ),
+				'value'       => '',
+				'dependency' => array(
+					'element'   => 'slider_height',
+					'value' => array(
+						'custom-height',
+					),
 				),
 			),
 			array(
@@ -236,15 +258,6 @@ function mm_vc_slider() {
 				'dependency' => array(
 					'element'   => 'autoplay',
 					'not_empty' => true,
-				),
-			),
-			array(
-				'type'        => 'checkbox',
-				'heading'     => __( 'Adaptive Height', 'mm-components' ),
-				'param_name'  => 'adaptive_height',
-				'description' => __( 'The slideshow height will change depending on the height of the current content.', 'mm-components' ),
-				'value'       => array(
-					__( 'Yes', 'mm-components' ) => 1,
 				),
 			),
 			array(
