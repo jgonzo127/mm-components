@@ -71,21 +71,13 @@ function mm_slider( $args ) {
 
 	if ( $full_height ) {
 		$mm_classes .= ' mm-full-window-height';
-		$wrap_styles[] = '';
+		$slider_height = '';
 	} else {
 		if ( 1 < (int)$min_height ) {
-			$wrap_styles[] = 'height: ' . (int)$min_height . 'px;';
+			$slider_height = 'height: ' . (int)$min_height . 'px;';
 		}
 	}
 
-	if ( $adaptive_height ) {
-		$wrap_styles[] = '';
-		$set_gallery_size = true;
-	}
-
-	$wrap_styles[]= "background-position: $background_position;";
-
-	$wrap_styles = implode( ' ', $wrap_styles );
 
 	$slider_options = array(
 		'cellSelector'    => '.mm-carousel-item',
@@ -124,7 +116,7 @@ function mm_slider( $args ) {
 
 	ob_start() ?>
 
-	<div class="<?php echo esc_attr( $mm_classes ); ?>" style="<?php echo esc_attr( $wrap_styles ); ?>" data-flickity=' <?php echo esc_attr( $slider_atts ); ?> '>
+	<div class="<?php echo esc_attr( $mm_classes ); ?>" style="<?php echo esc_attr( $slider_height ); ?>" data-flickity=' <?php echo esc_attr( $slider_atts ); ?> '>
 
 	<?php
 		if( ! empty( $args['image_ids'] ) ) {
@@ -138,7 +130,7 @@ function mm_slider( $args ) {
 
 				printf(
 					'<div class="mm-slider-image mm-carousel-item">%s</div>',
-					wp_get_attachment_image( $image_id, 'large' )
+					wp_get_attachment_image( $image_id, 'full', array( 'style' => esc_attr( $background_position ) ) )
 				);
 			}
 		}

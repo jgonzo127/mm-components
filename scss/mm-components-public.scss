@@ -933,8 +933,11 @@ a.mm-button {
 
 .mm-slider .mm-carousel-item {
 	width: 100%;
-	height: 100%;
 	text-align: center;
+}
+
+.mm-slider.non-adaptive-height .mm-carousel-item {
+	height: auto;
 }
 
 /* Social Icons
