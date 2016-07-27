@@ -23,13 +23,14 @@ function mm_slider( $args ) {
 
 	// Set our defaults and use them as needed.
 	$defaults = array(
+		'slider_type'         => '',
 		'image_ids'           => '',
-		'background_position' => "center bottom",
 		'slider_content'      => '',
 		'slider_height'       => 'custom-height',
 		'custom_height'       => 360,
 		'loop'                => true,
 		'full_height'         => false,
+		'full-width'          => false,
 		'autoplay'            => true,
 		'duration'            => 6000,
 		'adaptive_height'     => false,
@@ -42,12 +43,13 @@ function mm_slider( $args ) {
 	$args = wp_parse_args( (array)$args, $defaults );
 
 	// Get clean param values.
+	$slider_type         = $args['slider_type'];
 	$image_ids           = $args['image_ids'];
-	$background_position = $args['background_position'];
 	$slider_content      = $args['slider_content'];
 	$slider_height       = sanitize_text_field( $args['slider_height'] );
 	$custom_height       = $args['custom_height'];
 	$full_height         = mm_true_or_false( $args['full_height'] );
+	$full_width          = mm_true_or_false( $args['full_width'] );
 	$loop                = mm_true_or_false( $args['loop'] );
 	$autoplay            = mm_true_or_false( $args['autoplay'] );
 	$adaptive_height     = mm_true_or_false( $args['adaptive_height'] );
@@ -86,6 +88,16 @@ function mm_slider( $args ) {
 		$mm_classes .= ' adaptive';
 	}  else {
 		$custom_height = '';
+	}
+
+	if ( 'static-content' == $slider_type ) {
+		$mm_classes .= ' static-content';
+	} else {
+		$mm_classes .= ' content-as-slides';
+	}
+
+	if ( 'full-width' ) {
+		$mm_classes .= ' full-width';
 	}
 
 	$slider_options = array(
@@ -139,13 +151,17 @@ function mm_slider( $args ) {
 
 				printf(
 					'<div class="mm-slider-image mm-carousel-item">%s</div>',
-					wp_get_attachment_image( $image_id, 'full', array( 'style' => esc_attr( $background_position ) ) )
+					wp_get_attachment_image( $image_id, 'full' )
 				);
 			}
 		}
 	?>
 
-	<div class="mm-carousel-content" ><?php echo do_shortcode( $inner_output ); ?></div>
+	<div class="content-wrapper">
+
+		<?php echo do_shortcode( $inner_output ); ?>
+
+	</div>
 
 	</div>
 
@@ -182,6 +198,7 @@ add_action( 'vc_before_init', 'mm_vc_slider' );
  */
 function mm_vc_slider() {
 
+	$types = mm_get_slider_types_for_vc( 'mm-slider' );
 	$heights = mm_get_slider_heights_for_vc( 'mm-slider' );
 
 	vc_map( array(
@@ -193,11 +210,24 @@ function mm_vc_slider() {
 		'is_container' => true,
 		'params'   => array(
 			array(
+				'type'       => 'dropdown',
+				'heading'    => __( 'Select Slider Types', 'mm-components' ),
+				'param_name' => 'slider_type',
+				'description' => __( '"Content As Slides" uses Visual Composer rows to determine the number of slides. "Static Content" uses image uploads as slides.', 'mm-components' ),
+				'value'      => $types,
+			),
+			array(
 				'type'        => 'attach_images',
 				'heading'     => __( 'Images', 'mm-components' ),
 				'param_name'  => 'image_ids',
 				'description' => __( 'The bigger the image size, the better.', 'mm-components' ),
 				'value'       => '',
+				'dependency' => array(
+					'element'   => 'slider_type',
+					'value' => array(
+						'static-content',
+					),
+				),
 			),
 			array(
 				'type'       => 'dropdown',
@@ -217,6 +247,15 @@ function mm_vc_slider() {
 					'value' => array(
 						'custom-height',
 					),
+				),
+			),
+			array(
+				'type'        => 'checkbox',
+				'heading'     => __( 'Full Width?', 'mm-components' ),
+				'param_name'  => 'full_width',
+				'description' => __( '', 'mm-components' ),
+				'value'       => array(
+					__( 'Yes', 'mm-components' ) => 1,
 				),
 			),
 			array(
