@@ -3,38 +3,38 @@ var $ = jQuery;
 var mm_posts_ajax_data = function( newTerm, newPageVal ) {
 
 	$mmPosts = $( '.mm-posts' );
+	var $counter = 0;
 
 	$mmPosts.each( function( index ) {
 		var postsDataHolder = {};
-		var counter = 0;
-		counter += 1;
+		$counter += 1;
 		var $postsScript = $( this ).find( '#mm-posts-script' ).html();
-		postsDataHolder["mmPostsData-"+counter] = $postsScript;
-		console.log( postsDataHolder["mmPostsData-1"] );
+		postsDataHolder["mmPostsData-"+$counter] = $postsScript;
+		console.log( postsDataHolder["mmPostsData-"+$counter] );
 		data = {
 			action            : 'mm_posts_ajax_filter',
 			currentPage       : newPageVal,
-			globalPostId      : postsDataHolder['mmPostsData-'+counter].global_post_id,
-			taxonomy          : postsDataHolder['mmPostsData-'+counter].taxonomy,
-			queryType         : postsDataHolder['mmPostsData-'+counter].query_type,
-			postIds           : postsDataHolder['mmPostsData-'+counter].postIds,
-			postType          : postsDataHolder['mmPostsData-'+counter].post_type,
+			globalPostId      : postsDataHolder['mmPostsData-'+$counter].global_post_id,
+			taxonomy          : postsDataHolder['mmPostsData-'+$counter].taxonomy,
+			queryType         : postsDataHolder['mmPostsData-'+$counter].query_type,
+			postIds           : postsDataHolder['mmPostsData-'+$counter].postIds,
+			postType          : postsDataHolder['mmPostsData-'+$counter].post_type,
 			term              : newTerm,
-			headingLevel      : postsDataHolder['mmPostsData-'+counter].heading_level,
-			perPage           : postsDataHolder['mmPostsData-'+counter].per_page,
-			paged             : postsDataHolder['mmPostsData-'+counter].paged,
-			pagination        : postsDataHolder['mmPostsData-'+counter].pagination,
-			template          : postsDataHolder['mmPostsData-'+counter].template,
-			showFeaturedImage : postsDataHolder['mmPostsData-'+counter].show_featured_image,
-			featuredImageSize : postsDataHolder['mmPostsData-'+counter].featured_image_size,
-			showPostInfo      : postsDataHolder['mmPostsData-'+counter].show_post_info,
-			showPostMeta      : postsDataHolder['mmPostsData-'+counter].show_post_meta,
-			usePostContent    : postsDataHolder['mmPostsData-'+counter].use_post_content,
-			linkTitle         : postsDataHolder['mmPostsData-'+counter].link_title,
-			masonry           : postsDataHolder['mmPostsData-'+counter].masonry,
-			totalPosts        : postsDataHolder['mmPostsData-'+counter].total_posts,
-			totalPages        : postsDataHolder['mmPostsData-'+counter].total_pages,
-			filterStyle       : postsDataHolder['mmPostsData-'+counter].filter_style
+			headingLevel      : postsDataHolder['mmPostsData-'+$counter].heading_level,
+			perPage           : postsDataHolder['mmPostsData-'+$counter].per_page,
+			paged             : postsDataHolder['mmPostsData-'+$counter].paged,
+			pagination        : postsDataHolder['mmPostsData-'+$counter].pagination,
+			template          : postsDataHolder['mmPostsData-'+$counter].template,
+			showFeaturedImage : postsDataHolder['mmPostsData-'+$counter].show_featured_image,
+			featuredImageSize : postsDataHolder['mmPostsData-'+$counter].featured_image_size,
+			showPostInfo      : postsDataHolder['mmPostsData-'+$counter].show_post_info,
+			showPostMeta      : postsDataHolder['mmPostsData-'+$counter].show_post_meta,
+			usePostContent    : postsDataHolder['mmPostsData-'+$counter].use_post_content,
+			linkTitle         : postsDataHolder['mmPostsData-'+$counter].link_title,
+			masonry           : postsDataHolder['mmPostsData-'+$counter].masonry,
+			totalPosts        : postsDataHolder['mmPostsData-'+$counter].total_posts,
+			totalPages        : postsDataHolder['mmPostsData-'+$counter].total_pages,
+			filterStyle       : postsDataHolder['mmPostsData-'+$counter].filter_style
 		};
 	});
 }
