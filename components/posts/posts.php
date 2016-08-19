@@ -215,7 +215,7 @@ function mm_posts_register_default_hooks( $context, $args ) {
 	}
 
 	if ( mm_true_or_false( $args['ajax_filter'] ) || $args['pagination'] == 'ajax-pagination' ) {
-		add_action( 'mm_posts_before', 'mm_posts_output_js_data_var', 10, 3 );
+		add_action( 'mm_posts_before_loop', 'mm_posts_output_js_data_var', 10, 3 );
 	}
 
 	if ( mm_true_or_false( $args['masonry'] ) ) {
@@ -410,8 +410,8 @@ function mm_posts_get_js_data_var( $query, $context, $args ) {
 	ob_start();
 
 	?>
-	<script type="text/javascript">
-	    var mmPostsData = <?php echo json_encode( $args );?>;
+	<script type="text/javascript" id="mm-posts-script">
+	    <?php echo json_encode( $args );?>;
 
 	</script>
 	<?php

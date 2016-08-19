@@ -2,41 +2,51 @@ var $ = jQuery;
 
 var mm_posts_ajax_data = function( newTerm, newPageVal ) {
 
-	data = {
-		action            : 'mm_posts_ajax_filter',
-		currentPage       : newPageVal,
-		globalPostId      : mmPostsData.global_post_id,
-		taxonomy          : mmPostsData.taxonomy,
-		queryType         : mmPostsData.query_type,
-		postIds           : mmPostsData.postIds,
-		postType          : mmPostsData.post_type,
-		term              : newTerm,
-		headingLevel      : mmPostsData.heading_level,
-		perPage           : mmPostsData.per_page,
-		paged             : mmPostsData.paged,
-		pagination        : mmPostsData.pagination,
-		template          : mmPostsData.template,
-		showFeaturedImage : mmPostsData.show_featured_image,
-		featuredImageSize : mmPostsData.featured_image_size,
-		showPostInfo      : mmPostsData.show_post_info,
-		showPostMeta      : mmPostsData.show_post_meta,
-		usePostContent    : mmPostsData.use_post_content,
-		linkTitle         : mmPostsData.link_title,
-		masonry           : mmPostsData.masonry,
-		totalPosts        : mmPostsData.total_posts,
-		totalPages        : mmPostsData.total_pages,
-		filterStyle       : mmPostsData.filter_style
-	};
+	$mmPosts = $( '.mm-posts' );
+
+	$mmPosts.each( function( index ) {
+		var postsDataHolder = {};
+		var counter = 0;
+		counter += 1;
+		var $postsScript = $( this ).find( '#mm-posts-script' ).html();
+		postsDataHolder["mmPostsData-"+counter] = $postsScript;
+		console.log( postsDataHolder["mmPostsData-1"] );
+		data = {
+			action            : 'mm_posts_ajax_filter',
+			currentPage       : newPageVal,
+			globalPostId      : postsDataHolder['mmPostsData-'+counter].global_post_id,
+			taxonomy          : postsDataHolder['mmPostsData-'+counter].taxonomy,
+			queryType         : postsDataHolder['mmPostsData-'+counter].query_type,
+			postIds           : postsDataHolder['mmPostsData-'+counter].postIds,
+			postType          : postsDataHolder['mmPostsData-'+counter].post_type,
+			term              : newTerm,
+			headingLevel      : postsDataHolder['mmPostsData-'+counter].heading_level,
+			perPage           : postsDataHolder['mmPostsData-'+counter].per_page,
+			paged             : postsDataHolder['mmPostsData-'+counter].paged,
+			pagination        : postsDataHolder['mmPostsData-'+counter].pagination,
+			template          : postsDataHolder['mmPostsData-'+counter].template,
+			showFeaturedImage : postsDataHolder['mmPostsData-'+counter].show_featured_image,
+			featuredImageSize : postsDataHolder['mmPostsData-'+counter].featured_image_size,
+			showPostInfo      : postsDataHolder['mmPostsData-'+counter].show_post_info,
+			showPostMeta      : postsDataHolder['mmPostsData-'+counter].show_post_meta,
+			usePostContent    : postsDataHolder['mmPostsData-'+counter].use_post_content,
+			linkTitle         : postsDataHolder['mmPostsData-'+counter].link_title,
+			masonry           : postsDataHolder['mmPostsData-'+counter].masonry,
+			totalPosts        : postsDataHolder['mmPostsData-'+counter].total_posts,
+			totalPages        : postsDataHolder['mmPostsData-'+counter].total_pages,
+			filterStyle       : postsDataHolder['mmPostsData-'+counter].filter_style
+		};
+	});
 }
 
 var mm_posts_ajax_filter = function( e, newPageVal ) {
 	var $this = $( this );
 	var $mmPosts = $( '.mm-posts' );
-	var $mmPostsLoop = $mmPosts.find( '.mm-posts-loop' );
+	var $mmPostsLoop = $this.find( '.mm-posts-loop' );
 	var $filterLinks = $( '.mm-posts-filter a' );
 	var $pagination = $( '.pagination' );
-	var filterStyle = mmPostsData.filter_style;
-	var totalPages = mmPostsData.total_pages;
+	var filterStyle = 'dropdown';
+	var totalPages = 5;
 	var newTerm;
 	var $termText;
 	var $responseObj;
@@ -71,7 +81,7 @@ var mm_posts_ajax_filter = function( e, newPageVal ) {
 		}
 	}
 
-	$( '.mm-loading' ).show();
+	$this.find( '.mm-loading' ).show();
 
 	$this.parent( 'li' ).addClass( 'active' );
 
@@ -89,13 +99,15 @@ var mm_posts_ajax_filter = function( e, newPageVal ) {
 
 		$responseObj = $( response );
 
+		console.log( data );
+
 		// Format and update the posts loop.
 		$mmPostsLoop.replaceWith( response );
 
 		newTotalPages = $responseObj.filter( '.ajax-total-pages' ).text();
 
 		//Reload pagination links when number of pages changes.
-		if ( $mmPosts.hasClass( 'mm-ajax-pagination' ) ) {
+		if ( $this.hasClass( 'mm-ajax-pagination' ) ) {
 			if ( newTotalPages > 1 ) {
 				$pagination.empty().removeData("twbs-pagination").unbind("page").twbsPagination({
 		        	totalPages: newTotalPages,
@@ -107,14 +119,14 @@ var mm_posts_ajax_filter = function( e, newPageVal ) {
 			}
 		}
 
-		if( $( '.mm-posts-loop' ).find( 'article' ).length == 0 ) {
-			$( '.mm-posts-loop' ).before( '<span class="no-results">No Results Found.</span>' );
+		if( $this.find( '.mm-posts-loop' ).find( 'article' ).length == 0 ) {
+			$this.find( '.mm-posts-loop' ).before( '<span class="no-results">No Results Found.</span>' );
 		}
 
-		$( '.mm-loading' ).hide();
+		$this.find( '.mm-loading' ).hide();
 
 		//Remove loading text and total posts markup.
-		$mmPosts.find( '.ajax-total-pages' ).remove();
+		$this.find( '.ajax-total-pages' ).remove();
 		$filterLinks.bind( 'click', mm_posts_ajax_filter );
 		$filterLinks.attr( 'href', "#" );
 
@@ -127,7 +139,7 @@ var mm_posts_ajax_pagination = function( newTerm ) {
 	$this = $( this );
 	var $mmPosts = $( '.mm-posts' );
 	var $mmPostsLoop = $mmPosts.find( '.mm-posts-loop' );
-	var $paginationWrapper = $( '.mm-posts-ajax-pagination-wrapper' );
+	var $paginationWrapper = $this.find( '.mm-posts-ajax-pagination-wrapper' );
 	var $paginationLinks = $( '.pagination a' );
 	var $page;
 	var $responseObj;
@@ -159,9 +171,9 @@ var mm_posts_ajax_pagination = function( newTerm ) {
 
 		newTotalPages = $responseObj.filter( '.ajax-total-pages' ).text();
 
-		$mmPosts.find( '.ajax-total-pages' ).remove();
+		$this.find( '.ajax-total-pages' ).remove();
 
-		$( '.mm-loading' ).hide();
+		$this.find( '.mm-loading' ).hide();
 
 		$( '.pagination li:not(.disabled)' ).on( 'click', mm_posts_ajax_pagination );
 
@@ -173,25 +185,34 @@ jQuery( document ).ready( function( $ ) {
 
 	var totalPages;
 	var $mmPosts = $( '.mm-posts' );
+	var $counter = 0;
+	var postsDataHolder = {};
 
-	loading = '<i class="fa fa-circle-o-notch fa-spin fa-3x fa-fw mm-loading"></i>';
-	$( '.mm-posts' ).prepend( loading );
-	$( '.mm-loading' ).hide();
+	$mmPosts.each( function() {
+		$counter += 1;
+		var $this = $( this );
+		var $postsScript = $this.find( '#mm-posts-script' ).html();
+		postsDataHolder["mmPostsData-"+$counter] = $postsScript;
 
-	//Runs the AJAX filter.
-	$( '.mm-posts-filter .cat-item a').on( 'click', mm_posts_ajax_filter );
-	$( '.mm-posts-filter #term_dropdown' ).on( 'change', mm_posts_ajax_filter );
+		loading = '<i class="fa fa-circle-o-notch fa-spin fa-3x fa-fw mm-loading"></i>';
+		$this.prepend( loading );
+		$this.find( '.mm-loading' ).hide();
 
-	//Only run AJAX pagination if activated.
-	if ( $mmPosts.hasClass( 'mm-ajax-pagination' ) ) {
+		$this.prev( '.mm-posts-filter-wrapper' ).find( '.mm-posts-filter .cat-item a').on( 'click', mm_posts_ajax_filter );
+		$this.prev( '.mm-posts-filter-wrapper' ).find( '.mm-posts-filter #term_dropdown' ).on( 'change', mm_posts_ajax_filter );
+	
+		//Only run AJAX pagination if activated.
+		if ( $this.hasClass( 'mm-ajax-pagination' ) ) {
 
-		$( '.mm-posts-ajax-pagination-wrapper' ).twbsPagination({
-		    totalPages: mmPostsData.total_pages,
-		    last : false,
-		    first :false
-		});
+			$this.next( '.mm-posts-ajax-pagination-wrapper' ).twbsPagination({
+			    totalPages: 5,
+			    last : false,
+			    first :false
+			});
 
-		$( '.pagination li:not(.disabled)' ).on( 'click', mm_posts_ajax_pagination );
-	}
+			$this.find( '.pagination li:not(.disabled)' ).on( 'click', mm_posts_ajax_pagination );
+		}
+
+	})
 
 });
