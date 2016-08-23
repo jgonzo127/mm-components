@@ -411,7 +411,7 @@ function mm_posts_get_js_data_var( $query, $context, $args ) {
 
 	?>
 	<script type="text/javascript" id="mm-posts-script">
-	    <?php echo json_encode( $args );?>;
+	    <?php echo json_encode( $args );?>
 
 	</script>
 	<?php
